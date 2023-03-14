@@ -23,6 +23,7 @@ def ProcessUserInfo(userInfo):
     print(appPassword)
     print()
     print(hashResult)
+    print()
 
     return ('/')
 
