@@ -11,25 +11,51 @@
       }
     </style>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Student Management System</title>
   </head>
   <body>
     <div class="container">
-      <h1>Welcome to the Student Management System</h1>
-      <p>This is the home page for the student management system.</p>
+        <h1>Welcome to the Student Management System</h1>
+        <p>This is the home page for the student management system.</p>
     </div>
-    <form action="" onsubmit="return validateForm()">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username">
-      <br><br>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password">
-      <br><br>
-      <input type="submit" value="Submit" id="btn">
-   
-      <script src="script.js"></script>
+    <form>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+        <br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+        <br><br>
+        <input type="submit" value="Submit" onclick="validateForm()">
+    </form>
 
   </body>
+  <script>
+    function validateForm() {
+
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+    
+    if (username == "" || password == "") {
+        alert("Both username and password fields must be filled out");
+        return false;
+    }
+    if (password.length < 8) {
+        alert("Password must be at least 8 characters long");
+        return false;
+    }
+
+    console.log(username);
+    console.log(password);
+
+    const request = new XMLHttpRequest();
+    request.open('POST', `/ProcessUserInfo/${JSON.stringify(username, password)}`);
+    request.send();
+    alert("Login");
+
+    return true;
+    };
+  </script>
 </html>
