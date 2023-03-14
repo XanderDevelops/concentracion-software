@@ -1,6 +1,7 @@
 import json
 import hashlib
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+import sys
 
 app = Flask(__name__, template_folder='template')
 
@@ -8,18 +9,24 @@ app = Flask(__name__, template_folder='template')
 def home():
     return render_template('home.html')
 
-@app.route('/ProcessUserInfo/<string:username>/<string:password>', methods=['POST'])
-def ProcessUserInfo(username, password):
-    appUsername = json.loads(username)
-    appPassword = json.loads(password)
+@app.route('/ProcessUserInfo/<string:userInfo>', methods=['POST'])
+def ProcessUserInfo(userInfo):
+    userInfo=json.loads(userInfo)
+    username = userInfo['username']
+    appPassword = userInfo['password']
     passHash = appPassword.encode("utf-8")
     m = hashlib.sha256()
     m.update(passHash)
     hashResult = m.digest()
+    print(username)
+    print()
+    print(appPassword)
+    print()
     print(hashResult)
-    return ('/') 
+
+    return ('/')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
 
     
