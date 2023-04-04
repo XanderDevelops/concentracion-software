@@ -1,25 +1,16 @@
-import pyodbc
+import pyodbc 
 
 # Connection string for SQL Server
 conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=LAPTOPDANIEL\SQLSERVER;DATABASE=Registro de usuarios;UID=Grupo_1;PWD=123456789')
 cursor = conn.cursor()
 
-#print(conn)
-
-def check_id(id, external_id, email, phone, language, create_user, password, intent):
-    if(read_user(id) == None):
-        create_User(id, external_id, email, phone, language, create_user, password, intent)
-    else:
-        print("id existe")
-
 # Crear nuevo usuario
-def create_User(id, external_id, email, phone, language, create_user, password, intent):
-
-    cursor.execute("INSERT INTO Table_Estudiantes (ID, ExternalID, UserEmail, UserPhone, Language, CreateUser, CreateDate, UpdateDate, UpdateUser, Password, Intent) VALUES (?, ?, ?, ?, ?, ?, GETDATE(), GETDATE(), ?, ?, ?)",
-                   id, external_id, email, phone, language, create_user, create_user, password, intent)
+def create_User(user):
+    cursor.execute("INSERT INTO Table_Estudiantes (ExternalID, UserEmail, UserPhone, Language, CreateUser, CreateDate, UpdateDate, UpdateUser, Password, Intent) VALUES (?, ?, ?, ?, ?, GETDATE(), GETDATE(), ?, ?, ?)",
+                   user['external_id'], user['email'], user['phone'], user['language'], user['create_user'], user['update_user'], user['password'], user['intent'])
     conn.commit()
 
-# Leer todos los usuARIOS
+# Leer todos los usuarios
 def read_all_users():
     cursor.execute("SELECT * FROM Table_Estudiantes")
     return cursor.fetchall()
@@ -31,23 +22,12 @@ def read_user(id):
 
 # Actualizar correo de los usuarios
 def update_email(id, email):
-    cursor.execute(f"UPDATE Table_Estudiantes SET UserEmail = ?, UpdateDate = GETDATE(), UpdateUser = 'python_script' WHERE ID = ?", email, id)
+    cursor.execute("UPDATE Table_Estudiantes SET UserEmail = ?, UpdateDate = GETDATE(), UpdateUser = 'python_script' WHERE ID = ?", email, id)
     conn.commit()
 
 # Eliminar usuario
 def delete_user(id):
-    cursor.execute(f"DELETE FROM Table_Estudiantes WHERE ID = ?", 1)
+    cursor.execute("DELETE FROM Table_Estudiantes WHERE ID = ?", id)
     conn.commit()
 
-# Ejemplo
-user_id = 'b1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6'
-check_id(user_id, None, 'test@example.com', '555-555-1212', 'en-US', 'python_script', 'password123', 1)
-#print(read_user(user_id))
-#update_email(user_id, 'new_email1@example.com')
-#print(read_user(user_id))
-#delete_user(user_id)
-#print(read_all_users())
-
 # Cerrar cursor y conexión
-cursor.close()
-conn.close()
