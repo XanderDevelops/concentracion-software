@@ -19,14 +19,12 @@ def home():
     return render_template('home.html')
 
 @app.route('/', methods=['POST'])
-def handle_webhook():
+def handle_hmac():
     data = request.get_data()
     verified = check_webhook(data, request.headers.get('Hmac-SHA256'))
 
     if not verified:
         abort(401)
-    else:
-        print('good')
 
 
 @app.route('/ProcessUserInfo/<string:userInfo>', methods=['POST'])
@@ -42,13 +40,16 @@ def ProcessUserInfo(userInfo):
     m.update(passHash)
     hashResult = m.digest()
 
-    print()
-    print(username)
-    print()
-    print(appPassword)
-    print()
-    print(hashResult)
-    print()
+    dbusername = ""
+    dbhashpassword = ""
+    attemps = 0
+
+    if dbusername == username and dbhashpassword == hashResult:
+        print("Login Suscesfull")
+    elif dbusername != username and dbhashpassword != hashResult:
+        attemps += 1
+        if attemps == 3:
+            print("login Unsucesfull")
 
     return ('/')
 
