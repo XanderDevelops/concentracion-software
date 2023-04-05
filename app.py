@@ -8,7 +8,7 @@ import sys
 app = Flask(__name__, template_folder='template')
 SECRET = ("secret")
 
-def check_webhook(data, hmac_header):
+def check_hmac(data, hmac_header):
     digest = hmac.new(SECRET.encode('utf-8'), data, digestmod=hashlib.sha256).digest()
     compute_hmac = base64.b64encode(digest)
 
@@ -19,7 +19,7 @@ def home():
     return render_template('home.html')
 
 @app.route('/hmac', methods=['POST'])
-def handle_webhook():
+def handle_hmac():
     data = request.get_data()
     hmac=request.headers.get('Hmac-SHA256')
  
@@ -30,7 +30,6 @@ def handle_webhook():
 
     if hashResult!=hmac:
         abort(401)
-
 
 
 @app.route('/ProcessUserInfo/<string:userInfo>', methods=['POST'])
@@ -46,13 +45,16 @@ def ProcessUserInfo(userInfo):
     m.update(passHash)
     hashResult = m.digest()
 
-    print()
-    print(username)
-    print()
-    print(appPassword)
-    print()
-    print(hashResult)
-    print()
+    dbusername = ""
+    dbhashpassword = ""
+    attemps = 0
+
+    if dbusername == username and dbhashpassword == hashResult:
+        print("Login Suscesfull")
+    elif dbusername != username and dbhashpassword != hashResult:
+        attemps += 1
+        if attemps == 3:
+            print("login Unsucesfull")
 
     return ('/')
 
