@@ -18,15 +18,19 @@ def check_webhook(data, hmac_header):
 def home():
     return render_template('home.html')
 
-@app.route('/', methods=['POST'])
+@app.route('/hmac', methods=['POST'])
 def handle_webhook():
     data = request.get_data()
-    verified = check_webhook(data, request.headers.get('Hmac-SHA256'))
+    hmac=request.headers.get('Hmac-SHA256')
+ 
+    hmacgerenerate = data.encode("utf-8")
+    m = hashlib.sha256()
+    m.update(hmacgerenerate)
+    hashResult = m.digest()
 
-    if not verified:
+    if hashResult!=hmac:
         abort(401)
-    else:
-        print('good')
+
 
 
 @app.route('/ProcessUserInfo/<string:userInfo>', methods=['POST'])
