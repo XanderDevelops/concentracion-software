@@ -3,7 +3,7 @@ import json
 import hashlib
 import hmac
 from flask import Flask, render_template, request, abort
-import sys
+import Registro_de_usuarios
 
 app = Flask(__name__, template_folder='template')
 SECRET = ("secret")
@@ -57,6 +57,39 @@ def ProcessUserInfo(userInfo):
             print("login Unsucesfull")
 
     return ('/')
+
+@app.route('/RegisterUserInfo/<string:signInfo>', methods=['POST'])
+def RegisterUserInfo(signInfo):
+
+    signInfo = json.loads(signInfo)
+
+    email = signInfo['email']
+    phone = signInfo['phone']
+    username = signInfo['usernameR']
+    password = signInfo['passwordR']
+    password_hash = password.encode("utf-8")
+    p = hashlib.sha256()
+    p.update(password_hash)
+    hash_password = p.digest()
+
+    try:
+        user = {
+                'external_id': 'none',
+                'email': email,
+                'phone': phone,
+                'username': username,
+                'language': 'en-US',
+                'create_user': 'python_script',
+                'update_user': 'python_script',
+                'password': hash_password,
+                'intent': '1'
+        }
+        
+        Registro_de_usuarios.create_User(user)
+        return {'message': 'El usuario se registro correctamente'} 
+    except Exception as e:
+        return {'message': f'Error registering user: {e}'}, 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

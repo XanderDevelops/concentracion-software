@@ -6,17 +6,17 @@ cursor = conn.cursor()
 
 #print(conn)
 
-def check_id(id, external_id, email, phone, language, create_user, password, intent):
+def check_id(id, external_id, email, phone, username, language, create_user, password, intent):
     if(read_user(id) == None):
-        create_User(id, external_id, email, phone, language, create_user, password, intent)
+        create_User(id, external_id, email, phone, username, language, create_user, password, intent)
     else:
         print("id existe")
 
 # Crear nuevo usuario
-def create_User(id, external_id, email, phone, language, create_user, password, intent):
+def create_User(id, external_id, email, phone, username, language, create_user, password, intent):
 
     cursor.execute("INSERT INTO Table_Estudiantes (ID, ExternalID, UserEmail, UserPhone, Language, CreateUser, CreateDate, UpdateDate, UpdateUser, Password, Intent) VALUES (?, ?, ?, ?, ?, ?, GETDATE(), GETDATE(), ?, ?, ?)",
-                   id, external_id, email, phone, language, create_user, create_user, password, intent)
+                   id, external_id, email, phone, username, language, create_user, create_user, password, intent)
     conn.commit()
 
 # Leer todos los usuARIOS
