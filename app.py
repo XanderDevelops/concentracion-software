@@ -47,8 +47,8 @@ def ProcessUserInfo(userInfo):
     m.update(passHash)
     hashResult = m.digest()
     
-    dbusername = ""
-    dbhashpassword = ""
+    dbusername = Registro_de_usuarios.get_username()
+    dbhashpassword = Registro_de_usuarios.get_password()
 
     ip_add = request.remote_addr
     attemps = attempsIpMap.get(ip_add, 0)

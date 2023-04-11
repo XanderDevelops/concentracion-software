@@ -28,9 +28,14 @@ def read_all_users():
 def read_user(id):
     cursor.execute("SELECT * FROM Table_Estudiantes WHERE ID = ?", id)
     return cursor.fetchone()
-
+# Get username 
 def get_username(username):
     cursor.execute("SELECT * FROM Table_Estudiantes WHERE USERNAME = ?", username)
+    return cursor.fetchone()
+
+# Get Password
+def get_password(password):
+    cursor.execute("SELECT * FROM Table_Estudiantes WHERE PASSWORD = ?", password)
     return cursor.fetchone()
 
 # Actualizar correo de los usuarios
