@@ -2,7 +2,7 @@ import base64
 import json
 import hashlib
 import hmac
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, abort, redirect
 import Registro_de_usuarios
 
 app = Flask(__name__, template_folder='template')
@@ -50,11 +50,11 @@ def ProcessUserInfo(userInfo):
     attemps = 0
 
     if dbusername == username and dbhashpassword == hashResult:
-        print("Login Suscesfull")
+        return {'message': 'Login Suscesfull'}
     elif dbusername != username and dbhashpassword != hashResult:
         attemps += 1
         if attemps == 3:
-            print("login Unsucesfull")
+            return redirect('/')
 
     return ('/')
 
