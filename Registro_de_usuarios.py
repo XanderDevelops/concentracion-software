@@ -29,6 +29,10 @@ def read_user(id):
     cursor.execute("SELECT * FROM Table_Estudiantes WHERE ID = ?", id)
     return cursor.fetchone()
 
+def get_username(username):
+    cursor.execute("SELECT * FROM Table_Estudiantes WHERE USERNAME = ?", username)
+    return cursor.fetchone()
+
 # Actualizar correo de los usuarios
 def update_email(id, email):
     cursor.execute(f"UPDATE Table_Estudiantes SET UserEmail = ?, UpdateDate = GETDATE(), UpdateUser = 'python_script' WHERE ID = ?", email, id)
