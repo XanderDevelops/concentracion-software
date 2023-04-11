@@ -66,7 +66,6 @@
       }
 
       const userInfo = {username, password};
-      console.log(userInfo);
       alert("Login");
       const request = new XMLHttpRequest()
       request.open('POST', `/ProcessUserInfo/${JSON.stringify(userInfo)}`)
@@ -94,7 +93,6 @@
       };
 
       const signInfo = {email, phone, usernameR, passwordR};
-      console.log(signInfo);
       alert("Sign In");
       const request = new XMLHttpRequest()
       request.open('POST', `/RegisterUserInfo/${JSON.stringify(signInfo)}`)
