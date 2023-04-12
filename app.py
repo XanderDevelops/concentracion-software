@@ -2,7 +2,7 @@ import base64
 import json
 import hashlib
 import hmac
-from flask import Flask, render_template, request, abort, redirect
+from flask import Flask, render_template, request, abort
 import Registro_de_usuarios
 
 app = Flask(__name__, template_folder='template')
@@ -48,8 +48,7 @@ def ProcessUserInfo(userInfo):
     m.update(passHash)
     hashResult = m.digest()
     
-    dbhashpassword = Registro_de_usuarios.get_password(username)
-    status = Registro_de_usuarios.get_status(username)
+    dbhashpassword = ""
 
     ip_add = request.remote_addr
     attemps = attempsIpMap.get(ip_add, 0)
@@ -57,14 +56,14 @@ def ProcessUserInfo(userInfo):
     if attemps >= max_attemps:
         status = 1
         return 429, {'message': 'Login Unsuscesfull'}
-        
+    
     if hashResult != dbhashpassword:
         attempsIpMap[ip_add] = attemps + 1
+        remainingAttemps = max_attemps - 1
         return 401
     else:
         attempsIpMap.pop(ip_add, None)
-        return render_template("student.html"), {'message': 'Login Suscesfull'}
-
+        return 200, {'message': 'Login Suscesfull'}
 
 @app.route('/RegisterUserInfo/<string:signInfo>', methods=['POST'])
 def RegisterUserInfo(signInfo):
