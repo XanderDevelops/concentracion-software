@@ -20,6 +20,7 @@ def check_hmac(data, hmac_header):
 def home():
     return render_template('home.html')
 
+
 @app.route('/hmac', methods=['POST'])
 def handle_hmac():
     data = request.get_data()
@@ -47,21 +48,23 @@ def ProcessUserInfo(userInfo):
     m.update(passHash)
     hashResult = m.digest()
     
-    dbhashpassword = ""
+    dbhashpassword = Registro_de_usuarios.get_password(username)
+    status = Registro_de_usuarios.get_status(username)
 
     ip_add = request.remote_addr
     attemps = attempsIpMap.get(ip_add, 0)
 
     if attemps >= max_attemps:
+        status = 1
         return 429, {'message': 'Login Unsuscesfull'}
-    
+        
     if hashResult != dbhashpassword:
         attempsIpMap[ip_add] = attemps + 1
-        remainingAttemps = max_attemps - 1
         return 401
     else:
         attempsIpMap.pop(ip_add, None)
-        return 200, {'message': 'Login Suscesfull'}
+        return render_template("student.html"), {'message': 'Login Suscesfull'}
+
 
 @app.route('/RegisterUserInfo/<string:signInfo>', methods=['POST'])
 def RegisterUserInfo(signInfo):
@@ -79,22 +82,21 @@ def RegisterUserInfo(signInfo):
 
     try:
         user = {
-                'external_id': 'none',
-                'email': email,
-                'phone': phone,
+                'email': email,                
                 'username': username,
+                'phone': phone,
                 'language': 'en-US',
                 'create_user': 'python_script',
                 'update_user': 'python_script',
                 'password': hash_password,
-                'intent': '1'
+                'intent': '1',
+                'estado': '0'
         }
         
         Registro_de_usuarios.create_User(user)
         return {'message': 'El usuario se registro correctamente'} 
     except Exception as e:
         return {'message': f'Error registering user: {e}'}, 500
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
+    
     <style>
+      .forms {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+      }
       form {
         display: flex;
         flex-direction: column;
@@ -16,24 +23,24 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Student Management System</title>
   </head>
-  <body>
+  <body style="background-image: url(https://img.freepik.com/free-vector/vibrant-summer-ombre-background-vector_53876-105765.jpg?w=360); background-repeat: no-repeat; background-size: cover;">
     <div class="container">
         <h1>Welcome to the Student Management System</h1>
         <p>This is the home page for the student management system.</p>
     </div>
-    <div>
+    <div class="forms">
         <form>
-            <h2>User Login</h2>
+            <h2>Iniciar Sesión</h2>
             <label for="username">Username:</label>
             <input type="text" id="username" name="username">
             <br><br>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password">
             <br><br>
-            <input type="submit" value="SubmitLogin" onclick="validateForm()">
+            <input type="submit" value="Login" onclick="validateForm()">
         </form>
         <form>
-            <h2>User Register</h2>
+            <h2>Registrar Usuario</h2>
             <label for="email">Email:</label>
             <input type="text" id="email" name="email">
             <br><br>
@@ -49,7 +56,7 @@
             <label for="confirm_password">Confirm Password:</label>
             <input type="password" id="confirm_password" name="confirm_password">
             <br><br>
-            <input type="submit" value="SubmitSign" onclick="signForm()">
+            <input type="submit" value="Signin" onclick="signForm()">
         </form>
     </div>
 
@@ -75,25 +82,35 @@
     };
 
     function signForm() {
-
       let email = document.getElementById("email").value;
       let phone = document.getElementById("phone").value;
       let usernameR = document.getElementById("usernameR").value;
       let passwordR = document.getElementById("passwordR").value;
       let confirmPassword = document.getElementById("confirm_password").value;
-      if (passwordR == confirmPassword) {
-        if (passwordR.length < 8) {
-          alert("Password must be at least 8 characters long");
+      if (passwordR != null || passwordR != "") {
+        if (passwordR == confirmPassword) {
+          if (passwordR.length < 8) {
+            alert("Password must be at least 8 characters long");
+            return false;
+          }
+          else if (passwordR != confirmPassword) {
+              alert("Password must be the same");
+              return false;
+          }
+        }
+        else {
+          alert("Passwords do not match");
           return false;
-        };
+        }
       }
-      else if (passwordR =! confirmPassword) {
-        alert("Password must be the same");
+      else {
+        alert("Passwords Cant be blank");
         return false;
-      };
+      }
+    
+      
 
       const signInfo = {email, phone, usernameR, passwordR};
-      alert("Sign In");
       const request = new XMLHttpRequest()
       request.open('POST', `/RegisterUserInfo/${JSON.stringify(signInfo)}`)
       request.send()
